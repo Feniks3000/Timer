@@ -12,7 +12,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     private int seconds = 0;
     private boolean isRunning = false;
-
+    private boolean wasRunning = false;
     private TextView textViewTimer;
 
     @Override
@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             seconds = savedInstanceState.getInt("seconds");
             isRunning = savedInstanceState.getBoolean("isRunning");
+            wasRunning = savedInstanceState.getBoolean("wasRunning");
         }
 
         runTimer();
@@ -35,6 +36,22 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt("seconds", seconds);
         outState.putBoolean("isRunning", isRunning);
+        if(isRunning){
+            outState.putBoolean("wasRunning", true);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        wasRunning = isRunning;
+        isRunning = false;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isRunning = wasRunning;
     }
 
     public void onClickStartTimer(View view) {
